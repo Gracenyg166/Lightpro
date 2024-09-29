@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Photographie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://example.com/path-to-your-image.jpg'); /* Remplacez par votre URL d'image */
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+        }
+        input[type="file"], button {
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Light Photographie</h1>
+        <p>Envoyez votre photo pour recevoir vos images !</p>
+        <input type="file" id="photoInput" accept="image/*">
+        <button id="sendButton">Envoyer</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('sendButton').addEventListener('click', async () => {
+            const fileInput = document.getElementById('photoInput');
+            if (fileInput.files.length === 0) {
+                alert('Veuillez sélectionner une photo.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const clientId = await recognizeFace(file);
+            if (clientId) {
+                const success = await sendPhotoToWhatsApp(clientId);
+                document.getElementById('result').innerText = success 
+                    ? 'Photo envoyée avec succès !' 
+                    : 'Erreur lors de l\'envoi de la photo.';
+            } else {
+                document.getElementById('result').innerText = 'Client non reconnu.';
+            }
+        });
+
+        async function recognizeFace(file) {
+            // Simulez la reconnaissance faciale ici
+            return 'client123'; // ID du client reconnu (simulé)
+        }
+
+        async function sendPhotoToWhatsApp(clientId) {
+            const phoneNumber = '+243971421364'; // Numéro du client
+            const message = `Bonjour, voici les photos que vous avez demandées.`;
+            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+            
+            window.open(url, '_blank');
+            return true;
+        }
+    </script>
+</body>
+</html>
